@@ -1,0 +1,27 @@
+pandas
+numpy
+joblib
+requests
+
+# Backend (industry-ready upgrade)
+fastapi
+uvicorn[standard]
+sqlalchemy
+alembic
+pydantic-settings
+python-dotenv
+python-jose[cryptography]
+email-validator
+argon2-cffi
+
+# ML + Explainability
+xgboost
+scikit-learn
+shap
+matplotlib
+
+# Use Postgres in production (SQLite is fine for dev)
+psycopg2-binary
+pytest
+httpx
+

@@ -1,0 +1,42 @@
+{
+  "data_source": "CSV dataset: D:\\Major Project\\Bengaluru Ola.csv",
+  "rows_used": 26000,
+  "features": [
+    "Ride Distance",
+    "Hour",
+    "Weather_Clear",
+    "Weather_Heavy Rain",
+    "Weather_Rain"
+  ],
+  "target": "Proxy Fare (engineered dynamic-pricing target)",
+  "metrics": [
+    {
+      "model": "XGBoost",
+      "MAE": 5.88,
+      "RMSE": 7.438,
+      "R2": 0.9992
+    },
+    {
+      "model": "Random Forest",
+      "MAE": 6.419,
+      "RMSE": 8.499,
+      "R2": 0.9989
+    },
+    {
+      "model": "Linear Regression",
+      "MAE": 51.161,
+      "RMSE": 66.406,
+      "R2": 0.9348
+    }
+  ],
+  "best_model_by_mae": "XGBoost",
+  "artifacts": [
+    "ml/results/model_metrics.csv",
+    "ml/results/sample_predictions.csv",
+    "ml/results/model_comparison.png",
+    "ml/results/actual_vs_predicted.png",
+    "ml/results/feature_importance.png",
+    "ml/results/shap_summary.png"
+  ],
+  "limitation": "The evaluation uses the Bengaluru Ola ride dataset for successful rides, distance, time, and booking context. Weather indicators and the dynamic-pricing target are engineered for the academic ethical-surge experiment because the source CSV does not contain live weather or demand-supply surge labels."
+}
