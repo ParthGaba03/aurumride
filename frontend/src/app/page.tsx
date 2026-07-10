@@ -816,12 +816,14 @@ export default function Home() {
                       <div className="text-sm text-white/70">
                         Vehicle No: {latestBooking.driver_vehicle_number || "Will be updated shortly"}
                       </div>
-                      <div className="text-sm text-white/70">
-                        {latestBooking.driver_rating &&
-                        latestBooking.driver_rating > 0
-                        ? `Rating: ${latestBooking.driver_rating.toFixed(1)}★`
-                        : "New Driver"}
-                        </div>
+                      {latestBooking.status === "completed" &&
+                        latestBooking.user_rating &&
+                        latestBooking.driver_rating &&
+                        latestBooking.driver_rating > 0 && (
+                          <div className="text-sm text-white/70">
+                            Updated rating: {latestBooking.driver_rating.toFixed(1)}/5
+                          </div>
+                        )}
                     </div>
                     <div className="ar-card p-3">
                       <div className="text-[11px] font-semibold text-white/60">Ride details</div>

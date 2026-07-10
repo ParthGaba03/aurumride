@@ -17,8 +17,13 @@ function formatMoney(n: number) {
   return `₹${Math.round(n)}`;
 }
 
+function parseBackendDate(iso: string) {
+  const normalized = /[zZ]|[+-]\d{2}:\d{2}$/.test(iso) ? iso : `${iso}Z`;
+  return new Date(normalized);
+}
+
 function formatDate(iso: string) {
-  const d = new Date(iso);
+  const d = parseBackendDate(iso);
   return isNaN(d.getTime()) ? iso : d.toLocaleString();
 }
 
@@ -429,6 +434,15 @@ export function AdminBookingsPanel() {
                   {b.status === "cancelled" && <Badge>{b.cancellation_reason || "Cancelled"}</Badge>}
                 </div>
               </div>
+              {(b.user_rating || b.user_review) && (
+                <div className="ar-card mt-3 p-3">
+                  <div className="text-[11px] font-semibold text-white/60">Passenger feedback</div>
+                  <div className="mt-1 text-sm text-white/80">
+                    {b.user_rating ? `${b.user_rating} star` : "No rating"}
+                    {b.user_review ? ` - ${b.user_review}` : ""}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
 
@@ -466,7 +480,7 @@ export function AdminAnalyticsPanel() {
     const byHour: Record<string, number> = {};
     for (const b of items) {
       byStatus[b.status] = (byStatus[b.status] || 0) + 1;
-      const h = new Date(b.created_at).getHours();
+      const h = parseBackendDate(b.created_at).getHours();
       byHour[String(h)] = (byHour[String(h)] || 0) + 1;
     }
     return { total, revenue, avg, completed, byStatus, byHour };
