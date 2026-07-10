@@ -54,7 +54,7 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> TokenRe
             phone=f"DRV{user.id:06d}",
             vehicle_model="Not set",
             vehicle_number=f"KA-00-{user.id:04d}",
-            rating=4.7,
+            rating=0.0,
             is_active=True,
         )
         db.add(driver)

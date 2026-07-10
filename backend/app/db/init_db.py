@@ -58,7 +58,8 @@ def _ensure_sqlite_migrations() -> None:
     driver_cols = {c["name"] for c in insp.get_columns("drivers")}
     _add_col_if_missing_for_table("drivers", driver_cols, "user_id", "INTEGER")
     _add_col_if_missing_for_table("drivers", driver_cols, "vehicle_number", "TEXT DEFAULT 'NA-0000'")
-    _add_col_if_missing_for_table("drivers", driver_cols, "rating", "REAL DEFAULT 4.7")
+    _add_col_if_missing_for_table("drivers", driver_cols, "rating", "REAL DEFAULT 0")
+    _reset_unrated_driver_defaults()
 
 
 def _add_col_if_missing(existing_cols: set[str], name: str, ddl_type: str) -> None:
@@ -73,4 +74,23 @@ def _add_col_if_missing_for_table(table: str, existing_cols: set[str], name: str
         return
     with engine.begin() as conn:
         conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {name} {ddl_type}"))
+
+
+def _reset_unrated_driver_defaults() -> None:
+    with engine.begin() as conn:
+        conn.execute(
+            text(
+                """
+                UPDATE drivers
+                SET rating = 0
+                WHERE rating = 4.7
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM bookings
+                    WHERE bookings.driver_id = drivers.id
+                      AND bookings.user_rating IS NOT NULL
+                  )
+                """
+            )
+        )
 

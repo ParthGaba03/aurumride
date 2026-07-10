@@ -52,7 +52,7 @@ def ensure_driver_profile(current_user: User, db: Session) -> Driver:
         phone=f"DRV{current_user.id:06d}",
         vehicle_model="Not set",
         vehicle_number=f"KA-00-{current_user.id:04d}",
-        rating=4.7,
+        rating=0.0,
         is_active=True,
     )
     db.add(driver)

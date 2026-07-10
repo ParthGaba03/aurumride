@@ -13,6 +13,6 @@ class Driver(Base):
     phone: Mapped[str] = mapped_column(String(32), nullable=False, unique=True)
     vehicle_model: Mapped[str] = mapped_column(String(120), nullable=False)
     vehicle_number: Mapped[str] = mapped_column(String(32), nullable=False, default="NA-0000")
-    rating: Mapped[float] = mapped_column(Float, nullable=False, default=4.7)
+    rating: Mapped[float] = mapped_column(Float, nullable=False, default=0.0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 

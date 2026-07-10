@@ -261,7 +261,9 @@ export function AdminDriversPanel() {
               value={vehicleNumber}
               onChange={(e) => setVehicleNumber(e.target.value)}
             />
-            <div className="text-xs text-white/60">Driver rating: {driver.rating.toFixed(1)}★</div>
+            <div className="text-xs text-white/60">
+              Driver rating: {driver.rating > 0 ? `${driver.rating.toFixed(1)}/5` : "No passenger ratings yet"}
+            </div>
             <button
               className="ar-button-primary mt-1 px-4 py-2 text-sm font-black transition hover:-translate-y-0.5 disabled:opacity-60"
               disabled={busy}
