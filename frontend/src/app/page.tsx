@@ -276,8 +276,17 @@ export default function Home() {
         drop_lon: drop.lng,
         distance_km: distanceKm,
         eta_minutes: etaMins,
-        // Backend recalculates this quote to prevent client-side fare manipulation.
         fare_total: quote.final_fare,
+        base_fare: quote.base_fare,
+        original_predicted_fare: quote.model_predicted_fare,
+        final_fare: quote.final_fare,
+        weather_category: quote.weather.category,
+        weather_code: quote.weather.code,
+        precip_mm: quote.weather.precip_mm,
+        ethical_guardrail_applied: quote.ethical_guardrail_applied,
+        ethical_reason: quote.ethical_reason,
+        shap_base_value: quote.shap.base_value,
+        shap_contributions: quote.shap.contributions,
       });
       setLatestBooking(created);
       setToast(`Booking #${created.id} created (${created.status})`);

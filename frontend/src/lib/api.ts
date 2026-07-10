@@ -156,6 +156,16 @@ export const api = {
     distance_km: number;
     eta_minutes: number;
     fare_total: number;
+    base_fare?: number;
+    original_predicted_fare?: number;
+    final_fare?: number;
+    weather_category?: string;
+    weather_code?: number | null;
+    precip_mm?: number | null;
+    ethical_guardrail_applied?: boolean;
+    ethical_reason?: string | null;
+    shap_base_value?: number | null;
+    shap_contributions?: { feature: string; rupees: number }[];
   }) => request<Booking>("/api/bookings/", { method: "POST", body: JSON.stringify(payload) }),
   myBookings: () => request<Booking[]>("/api/bookings/me"),
   adminBookings: () => request<Booking[]>("/api/bookings/admin"),

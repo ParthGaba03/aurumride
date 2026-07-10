@@ -119,6 +119,32 @@ def create_booking(
     breakdown = pricing_service.quote(
         distance_km=payload.distance_km, hour=datetime.utcnow().hour, lat=payload.pickup_lat, lon=payload.pickup_lon
     )
+    quoted_final_fare = payload.final_fare or payload.fare_total
+    if quoted_final_fare and payload.base_fare is not None and payload.original_predicted_fare is not None:
+        fare_total = quoted_final_fare
+        weather_category = payload.weather_category or breakdown.weather.category
+        weather_code = payload.weather_code if payload.weather_code is not None else breakdown.weather.code
+        precip_mm = payload.precip_mm if payload.precip_mm is not None else breakdown.weather.precip_mm
+        ethical_guardrail_applied = payload.ethical_guardrail_applied
+        ethical_reason = payload.ethical_reason or breakdown.ethical_reason
+        base_fare = payload.base_fare
+        model_predicted_fare = payload.original_predicted_fare
+        final_fare = quoted_final_fare
+        shap_base_value = payload.shap_base_value
+        shap_contributions = payload.shap_contributions or breakdown.shap_contributions
+    else:
+        fare_total = breakdown.final_fare
+        weather_category = breakdown.weather.category
+        weather_code = breakdown.weather.code
+        precip_mm = breakdown.weather.precip_mm
+        ethical_guardrail_applied = breakdown.ethical_guardrail_applied
+        ethical_reason = breakdown.ethical_reason
+        base_fare = breakdown.base_fare
+        model_predicted_fare = breakdown.model_predicted_fare
+        final_fare = breakdown.final_fare
+        shap_base_value = breakdown.shap_base_value
+        shap_contributions = breakdown.shap_contributions
+
     booking = Booking(
         user_id=current_user.id,
         driver_id=assigned.id if assigned else None,
@@ -130,17 +156,17 @@ def create_booking(
         drop_lon=payload.drop_lon,
         distance_km=payload.distance_km,
         eta_minutes=payload.eta_minutes,
-        fare_total=breakdown.final_fare,
-        weather_category=breakdown.weather.category,
-        weather_code=breakdown.weather.code,
-        precip_mm=breakdown.weather.precip_mm,
-        ethical_guardrail_applied=breakdown.ethical_guardrail_applied,
-        ethical_reason=breakdown.ethical_reason,
-        base_fare=breakdown.base_fare,
-        original_predicted_fare=breakdown.model_predicted_fare,
-        final_fare=breakdown.final_fare,
-        shap_base_value=breakdown.shap_base_value,
-        shap_contributions_json=json.dumps(breakdown.shap_contributions),
+        fare_total=fare_total,
+        weather_category=weather_category,
+        weather_code=weather_code,
+        precip_mm=precip_mm,
+        ethical_guardrail_applied=ethical_guardrail_applied,
+        ethical_reason=ethical_reason,
+        base_fare=base_fare,
+        original_predicted_fare=model_predicted_fare,
+        final_fare=final_fare,
+        shap_base_value=shap_base_value,
+        shap_contributions_json=json.dumps(shap_contributions),
         status=BookingStatus.pending,
         auto_progress=False,
         ride_otp=f"{random.randint(1000, 9999)}",

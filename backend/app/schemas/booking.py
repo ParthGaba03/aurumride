@@ -13,6 +13,16 @@ class BookingCreate(BaseModel):
     distance_km: float = Field(gt=0, lt=500)
     eta_minutes: int = Field(gt=0, lt=24 * 60)
     fare_total: float | None = Field(default=None, gt=0, lt=100000)
+    base_fare: float | None = Field(default=None, gt=0, lt=100000)
+    original_predicted_fare: float | None = Field(default=None, lt=100000)
+    final_fare: float | None = Field(default=None, gt=0, lt=100000)
+    weather_category: str | None = Field(default=None, max_length=32)
+    weather_code: int | None = None
+    precip_mm: float | None = Field(default=None, ge=0)
+    ethical_guardrail_applied: bool = False
+    ethical_reason: str | None = Field(default=None, max_length=255)
+    shap_base_value: float | None = None
+    shap_contributions: list[dict] = []
 
 
 class BookingOut(BaseModel):
