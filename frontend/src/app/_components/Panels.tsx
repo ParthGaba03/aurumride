@@ -345,7 +345,7 @@ export function AdminBookingsPanel() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <div className="text-sm font-black">#{b.id}</div>
-                  <Badge>user {b.user_id}</Badge>
+                  <Badge>{b.user_email || `user ${b.user_id}`}</Badge>
                   <Badge>{b.status.toUpperCase()}</Badge>
                   <Badge>{formatMoney(b.fare_total)}</Badge>
                 </div>

@@ -28,6 +28,7 @@ class BookingCreate(BaseModel):
 class BookingOut(BaseModel):
     id: int
     user_id: int
+    user_email: str | None = None
     driver_id: int | None
     driver_name: str | None = None
     driver_phone: str | None = None

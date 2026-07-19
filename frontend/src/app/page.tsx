@@ -771,7 +771,7 @@ export default function Home() {
                         : latestBooking.status === "cancelled"
                           ? latestBooking.cancellation_reason || "Booking cancelled"
                         : latestBooking.status === "pending"
-                          ? "Waiting for Arjun Mehta to accept"
+                          ? `Waiting for ${latestBooking.driver_name || "driver"} to accept`
                           : latestBooking.status === "confirmed"
                             ? "Driver accepted your booking"
                             : latestBooking.status === "approaching"

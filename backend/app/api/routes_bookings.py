@@ -26,8 +26,15 @@ router = APIRouter()
 
 
 def _assign_driver(db: Session) -> Driver | None:
-    # MVP assignment: pick most recently created active driver.
-    return db.query(Driver).filter(Driver.is_active == True).order_by(Driver.id.desc()).first()  # noqa: E712
+    active_drivers = db.query(Driver).filter(Driver.is_active == True).order_by(Driver.id.asc()).all()  # noqa: E712
+    if not active_drivers:
+        return None
+
+    booking_counts = {
+        driver.id: db.query(Booking).filter(Booking.driver_id == driver.id).count()
+        for driver in active_drivers
+    }
+    return min(active_drivers, key=lambda driver: (booking_counts.get(driver.id, 0), driver.id))
 
 
 def _advance_demo_status(booking: Booking) -> bool:
@@ -60,6 +67,7 @@ def _advance_and_commit(db: Session, bookings: list[Booking]) -> None:
 
 
 def _serialize_booking(db: Session, booking: Booking, *, include_otp: bool = False) -> dict:
+    passenger = db.query(User).filter(User.id == booking.user_id).first()
     driver = None
     if booking.driver_id is not None:
         driver = db.query(Driver).filter(Driver.id == booking.driver_id).first()
@@ -75,6 +83,7 @@ def _serialize_booking(db: Session, booking: Booking, *, include_otp: bool = Fal
     return {
         "id": booking.id,
         "user_id": booking.user_id,
+        "user_email": passenger.email if passenger else None,
         "driver_id": booking.driver_id,
         "driver_name": driver.name if driver else None,
         "driver_phone": driver.phone if driver else None,

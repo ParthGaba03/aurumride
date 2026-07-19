@@ -9,6 +9,7 @@ export type AuthRole = "user" | "admin";
 export type Booking = {
   id: number;
   user_id: number;
+  user_email?: string | null;
   driver_id: number | null;
   driver_name?: string | null;
   driver_phone?: string | null;
